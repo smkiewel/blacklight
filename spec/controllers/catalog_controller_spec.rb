@@ -137,7 +137,7 @@ describe CatalogController do
 
       it "gets the documents" do
         expect(docs).to have(10).documents
-        expect(docs.first.keys).to match_array(["published_display", "author_display", "lc_callnum_display", "pub_date", "subtitle_display", "format", "material_type_display", "title_display", "id", "subject_topic_facet", "language_facet", "score"])
+        expect(docs.first.keys).to match_array(["published_ssim", "author_ssim", "lc_callnum_ssim", "pub_date_ssim", "subtitle_tsim", "format", "material_type_ssim", "title_tsim", "id", "subject_ssim", "language_ssim", "score"])
       end
 
       it "gets the facets" do
@@ -251,7 +251,7 @@ describe CatalogController do
         get :show, params: { id: doc_id, format: 'json' }
         expect(response).to be_success
         json = JSON.parse response.body
-        expect(json["response"]["document"].keys).to match_array(["author_t", "opensearch_display", "marc_display", "published_display", "author_display", "lc_callnum_display", "title_t", "pub_date", "pub_date_sort", "subtitle_display", "format", "url_suppl_display", "material_type_display", "title_display", "subject_addl_t", "subject_t", "isbn_t", "id", "title_addl_t", "subject_geo_facet", "subject_topic_facet", "author_addl_t", "language_facet", "subtitle_t", "timestamp"])
+        expect(json["response"]["document"].keys).to match_array(["author_ssim", "opensearch_display", "marc_ss", "published_ssim", "author_ssim", "lc_callnum_ssim", "title_tsim", "pub_date_ssim", "pub_date_si", "subtitle_tsim", "format", "url_suppl_ssim", "material_type_ssim", "title_tsim", "subject_addl_ssim", "subject_tsim", "isbn_ssim", "id", "title_addl_tsim", "subject_geo_ssim", "subject_ssim", "author_addl_tsim", "language_ssim", "subtitle_tsim", "timestamp"])
       end
     end
 

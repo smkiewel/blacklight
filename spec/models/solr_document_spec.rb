@@ -4,7 +4,7 @@ describe SolrDocument do
   
   before(:each) do
     
-    @solrdoc = SolrDocument.new :id => '00282214', :format => ['Book'], :title_display => 'some-title'
+    @solrdoc = SolrDocument.new :id => '00282214', :format => ['Book'], :title_tsim => 'some-title'
 
   end
   
@@ -16,8 +16,8 @@ describe SolrDocument do
   
   describe "access methods" do
 
-    it "has the right value for title_display" do
-      expect(@solrdoc[:title_display]).not_to be_nil
+    it "has the right value for title_tsim" do
+      expect(@solrdoc[:title_tsim]).not_to be_nil
     end
     
     it "has the right value for format" do

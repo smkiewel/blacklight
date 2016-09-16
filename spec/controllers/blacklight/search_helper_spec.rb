@@ -41,9 +41,9 @@ describe Blacklight::SearchHelper do
     @no_docs_query = 'zzzzzzzzzzzz'
     @single_word_query = 'include'
     @mult_word_query = 'tibetan history'
-  #  f[format][]=Book&f[language_facet][]=English
+  #  f[format][]=Book&f[language_ssim][]=English
     @single_facet = {:format=>'Book'}
-    @multi_facets = {:format=>'Book', :language_facet=>'Tibetan'}
+    @multi_facets = {:format=>'Book', :language_ssim=>'Tibetan'}
     @bad_facet = {:format=>'666'}
     @subject_search_params = {:commit=>"search", :search_field=>"subject", :action=>"index", :"controller"=>"catalog", :"rows"=>"10", :"q"=>"wome"}
   end
@@ -62,9 +62,9 @@ describe Blacklight::SearchHelper do
         allow(blacklight_config).to receive(:default_solr_params).and_return({:qt => 'custom_request_handler'})
         allow(blacklight_solr).to receive(:send_and_receive) do |path, params|
           expect(path).to eq 'select'
-          expect(params[:params]['facet.field']).to eq ["format", "{!ex=pub_date_single}pub_date", "subject_topic_facet", "language_facet", "lc_1letter_facet", "subject_geo_facet", "subject_era_facet"]
-          expect(params[:params]["facet.query"]).to eq ["pub_date:[#{5.years.ago.year} TO *]", "pub_date:[#{10.years.ago.year} TO *]", "pub_date:[#{25.years.ago.year} TO *]"]
-          expect(params[:params]).to include('rows' => 10, 'qt'=>"custom_request_handler", 'q'=>"", "f.subject_topic_facet.facet.limit"=>21, 'sort'=>"score desc, pub_date_sort desc, title_sort asc")
+          expect(params[:params]['facet.field']).to eq ["format", "{!ex=pub_date_ssim_single}pub_date_ssim", "subject_ssim", "language_ssim", "lc_1letter_ssim", "subject_geo_ssim", "subject_era_ssim"]
+          expect(params[:params]["facet.query"]).to eq ["pub_date_ssim:[#{5.years.ago.year} TO *]", "pub_date_ssim:[#{10.years.ago.year} TO *]", "pub_date_ssim:[#{25.years.ago.year} TO *]"]
+          expect(params[:params]).to include('rows' => 10, 'qt'=>"custom_request_handler", 'q'=>"", "f.subject_ssim.facet.limit"=>21, 'sort'=>"score desc, pub_date_si desc, title_si asc")
         end.and_return({'response'=>{'docs'=>[]}})
         subject.search_results(q: @all_docs_query)
       end
@@ -91,7 +91,7 @@ describe Blacklight::SearchHelper do
       let(:blacklight_config) { copy_of_catalog_config }
       before do
         blacklight_config.default_solr_params[:group] = true
-        blacklight_config.default_solr_params[:'group.field'] = 'pub_date_sort'
+        blacklight_config.default_solr_params[:'group.field'] = 'pub_date_si'
         (@solr_response, @document_list) = subject.search_results(q: @all_docs_query)
       end
 
@@ -109,9 +109,9 @@ describe Blacklight::SearchHelper do
       let(:blacklight_config) { copy_of_catalog_config }
 
       before do
-        allow(subject).to receive_messages grouped_key_for_results: 'title_sort'
+        allow(subject).to receive_messages grouped_key_for_results: 'title_si'
         blacklight_config.default_solr_params[:group] = true
-        blacklight_config.default_solr_params[:'group.field'] = ['pub_date_sort', 'title_sort']
+        blacklight_config.default_solr_params[:'group.field'] = ['pub_date_si', 'title_si']
         (@solr_response, @document_list) = subject.search_results(q: @all_docs_query)
       end
 
@@ -121,7 +121,7 @@ describe Blacklight::SearchHelper do
 
       it "returns a grouped response" do
         expect(@solr_response).to be_a_kind_of Blacklight::Solr::Response::GroupResponse
-        expect(@solr_response.group_field).to eq "title_sort"
+        expect(@solr_response.group_field).to eq "title_si"
       end
     end
 
@@ -354,7 +354,7 @@ describe Blacklight::SearchHelper do
     let(:blacklight_config) { copy_of_catalog_config }
 
     it "returns specified value for facet_field specified" do
-      expect(subject.facet_limit_for("subject_topic_facet")).to eq blacklight_config.facet_fields["subject_topic_facet"].limit
+      expect(subject.facet_limit_for("subject_ssim")).to eq blacklight_config.facet_fields["subject_ssim"].limit
     end
 
     it "facet_limit_hash should return hash with key being facet_field and value being configured limit" do
@@ -365,31 +365,31 @@ describe Blacklight::SearchHelper do
 
     it "handles no facet_limits in config" do
       blacklight_config.facet_fields = {}
-      expect(subject.facet_limit_for("subject_topic_facet")).to be_nil
+      expect(subject.facet_limit_for("subject_ssim")).to be_nil
     end
 
     describe "for 'true' configured values" do
       let(:blacklight_config) do
         Blacklight::Configuration.new do |config|
-          config.add_facet_field "language_facet", limit: true
+          config.add_facet_field "language_ssim", limit: true
         end
       end
       it "returns nil if no @response available" do
         expect(subject.facet_limit_for("some_unknown_field")).to be_nil
       end
       it "gets from @response facet.limit if available" do        
-        @response = instance_double(Blacklight::Solr::Response, aggregations: { "language_facet" => double(limit: nil) })
+        @response = instance_double(Blacklight::Solr::Response, aggregations: { "language_ssim" => double(limit: nil) })
         subject.instance_variable_set(:@response, @response)
-        blacklight_config.facet_fields['language_facet'].limit = 10
-        expect(subject.facet_limit_for("language_facet")).to eq 10
+        blacklight_config.facet_fields['language_ssim'].limit = 10
+        expect(subject.facet_limit_for("language_ssim")).to eq 10
       end
       it "gets the limit from the facet field in @response" do
-        @response = instance_double(Blacklight::Solr::Response, aggregations: { "language_facet" => double(limit: 16) })
+        @response = instance_double(Blacklight::Solr::Response, aggregations: { "language_ssim" => double(limit: 16) })
         subject.instance_variable_set(:@response, @response)
-        expect(subject.facet_limit_for("language_facet")).to eq 15
+        expect(subject.facet_limit_for("language_ssim")).to eq 15
       end
       it "defaults to 10" do
-        expect(subject.facet_limit_for("language_facet")).to eq 10
+        expect(subject.facet_limit_for("language_ssim")).to eq 10
       end
     end
   end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 describe "catalog/index.json" do
   let(:response) { instance_double(Blacklight::Solr::Response, documents: docs) }
-  let(:docs) { [{ id: '123', title_t: 'Book1' }, { id: '456', title_t: 'Book2' }] }
+  let(:docs) { [{ id: '123', title_tsim: 'Book1' }, { id: '456', title_tsim: 'Book2' }] }
   let(:facets) { double("facets") }
   let(:config) { instance_double(Blacklight::Configuration) }
   let(:presenter) { Blacklight::JsonPresenter.new(response, facets, config) }
@@ -15,8 +15,8 @@ describe "catalog/index.json" do
     assign :presenter, presenter
     render template: "catalog/index.json", format: :json
     hash = JSON.parse(rendered)
-    expect(hash).to eq('response' => { 'docs' => [{ 'id' => '123', 'title_t' => 'Book1' },
-                                                  { 'id' => '456', 'title_t' => 'Book2' }],
+    expect(hash).to eq('response' => { 'docs' => [{ 'id' => '123', 'title_tsim' => 'Book1' },
+                                                  { 'id' => '456', 'title_tsim' => 'Book2' }],
                                        'facets' => [{ 'name' => "format", 'label' => "Format",
                                                       'items' => [
                                                         { 'value' => 'Book',
