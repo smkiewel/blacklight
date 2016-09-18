@@ -1,5 +1,5 @@
 <% # main container for facets/limits menu -%>
-<% if has_facet_values? %>
+<% if @presenter.facets.values? %>
 <div id="facets" class="facets sidenav">
 
   <div class="top-panel-heading">
@@ -11,7 +11,7 @@
   </div>
 
   <div id="facet-panel-collapse" class="collapse navbar-toggleable-xs">
-    <%= render_facet_partials %>
+    <%= @presenter.facets.render_partials %>
   </div>
 </div>
 <% end %>
