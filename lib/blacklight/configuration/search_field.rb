@@ -13,5 +13,10 @@ module Blacklight
     def validate!
       raise ArgumentError, "Must supply a search field key" if self.key.nil?
     end
+
+    def search_field_label
+      return label if label
+      I18n.t('blacklight.search.fields.default')
+    end
   end
 end
