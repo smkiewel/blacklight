@@ -46,7 +46,7 @@ module Blacklight::Bookmarks
     @document_list = ActiveSupport::Deprecation::DeprecatedObjectProxy.new(deprecated_document_list, "The @document_list instance variable is now deprecated and will be removed in Blacklight 8.0")
 
     respond_to do |format|
-      format.html { }
+      format.html { @presenter = Blacklight::BookmarksListPresenter.new(@bookmarks, view_context)}
       format.rss  { render :layout => false }
       format.atom { render :layout => false }
       format.json do
