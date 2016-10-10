@@ -75,7 +75,7 @@ fr:
         success: 'Votre historique de recherche a bien été effacé.'
         failure: 'Un problème est survenu lors de la suppression.'
       title: 'Historique de recherche'
-      title: 'Historique de recherche - %{application_name}'
+      page_title: 'Historique de recherche - %{application_name}'
       no_history: 'Il n''y a aucun historique en cours.'
       recent: 'Dernières recherches'
       forget: 'Supprimer'
@@ -84,8 +84,6 @@ fr:
     tools:
       title: 'Outils'
       citation: 'Citer'
-      endnote: 'Exporter vers EndNote ou Zotero'
-      refworks: 'Exporter vers Refworks'
       email: 'Envoyer'
       sms: 'SMS'
       clear: 'Effacer'
@@ -169,7 +167,7 @@ fr:
         search_field:
           label: 'dans'
           title: 'Options de recherche'
-        post_label: 'pour'
+          post_label: 'pour'
         search:
           label: 'Rechercher'
           placeholder: 'Rechercher'
@@ -187,9 +185,6 @@ fr:
         other: '<b>%{current}</b> sur <b>%{total}</b>'
       documents:
         counter: '%{counter}. '
-      folder:
-        select: 'Panier'
-        unselect: 'Panier'
       facets:
         title: 'Limiter votre recherche'
         clear: 'Effacer'
